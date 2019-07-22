@@ -37,17 +37,15 @@ public class CountNegativeSlopes {
         }
     }
 
-    public static int countNegativeSlopes(Point[] points) throws ContainsVerticalLinesException {
-        if (Utils.checkAnyVerticalLine(points))
-            throw new ContainsVerticalLinesException();
+    public static int countNegativeSlopes(Point[] points) {
         Arrays.sort(points, new Utils.PointXComparator());
         CountNegativeSlopesMerge countNegativeSlopesMerge = new CountNegativeSlopesMerge(new Utils.PointYComparator());
         Utils.mergeSort(points, countNegativeSlopesMerge);
         return countNegativeSlopesMerge.getCount();
     }
 
-    public static void main(String[] args) throws Exception {
-        Point[] points = new Point[] { new Point(4, 2), new Point(2, 1), new Point(3, 2.5), new Point(5, 2) };
+    public static void main(String[] args) {
+        Point[] points = new Point[] { new Point(4, 2), new Point(2, 1), new Point(3, 2.5), new Point(4, 3), new Point(5, 2) };
         int ans = countNegativeSlopes(points);
         System.out.println(ans);
     }
