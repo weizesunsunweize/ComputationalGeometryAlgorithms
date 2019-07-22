@@ -3,7 +3,6 @@ package cga;
 import cga.components.Point;
 
 import cga.Utils;
-import cga.exceptions.ContainsVerticalLinesException;
 
 import java.util.Arrays;
 import java.util.Comparator;
