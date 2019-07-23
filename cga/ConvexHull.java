@@ -19,7 +19,7 @@ public class ConvexHull {
         if (points.length == 2)
             return (new Utils.PointXComparator()).compare(points[0], points[1]) <= 0 ? new int[] { 0, 1 }
                     : new int[] { 1, 0 };
-        Integer[] indices = Utils.argsortWithX(points);
+        int[] indices = Utils.argsortWithX(points);
         Stack<Integer> upperHull = new Stack<Integer>();
         upperHull.push(indices[0]);
         upperHull.push(indices[1]);
