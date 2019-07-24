@@ -63,6 +63,9 @@ public class Maxima {
         return ans;
     }
 
+    // TODO:
+    // Double trick
+
     public static void main(String[] args) {
         Point[] points = new Point[] { new Point(9, 1), new Point(8, 2), new Point(1, 10), new Point(2, 5),
                 new Point(3, 10), new Point(5, 1), new Point(5, 10) };

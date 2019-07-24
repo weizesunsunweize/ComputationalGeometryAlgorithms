@@ -16,7 +16,7 @@ public class Utils {
      * Unbox primitive arrays
      * 
      * @param array
-     * @return unboxed array
+     * @return Unboxed array
      */
     public static int[] unbox(Integer[] array) {
         int[] ans = new int[array.length];
@@ -27,6 +27,26 @@ public class Utils {
 
     public static double[] unbox(Double[] array) {
         double[] ans = new double[array.length];
+        for (int i = 0; i < array.length; i++)
+            ans[i] = array[i];
+        return ans;
+    }
+
+    /**
+     * Box primitive arrays
+     * 
+     * @param array
+     * @return Boxed array
+     */
+    public static Integer[] box(int[] array) {
+        Integer[] ans = new Integer[array.length];
+        for (int i = 0; i < array.length; i++)
+            ans[i] = array[i];
+        return ans;
+    }
+
+    public static Double[] box(double[] array) {
+        Double[] ans = new Double[array.length];
         for (int i = 0; i < array.length; i++)
             ans[i] = array[i];
         return ans;
@@ -227,6 +247,32 @@ public class Utils {
         ArgsortComparator<T> argComp = new ArgsortComparator<T>(comp, array);
         Arrays.sort(indices, argComp);
         return unbox(indices);
+    }
+
+    public static int[] argsort(int[] array) {
+        Integer[] indices = new Integer[array.length];
+        for (int i = 0; i < array.length; i++)
+            indices[i] = i;
+        Comparator<Integer> comp = new Comparator<Integer>() {
+            @Override
+            public int compare(Integer o1, Integer o2) {
+                return Integer.compare(array[o1], array[o2]);
+            }
+        };
+        return argsort(indices, comp);
+    }
+
+    public static int[] argsort(double[] array) {
+        Integer[] indices = new Integer[array.length];
+        for (int i = 0; i < array.length; i++)
+            indices[i] = i;
+        Comparator<Integer> comp = new Comparator<Integer>() {
+            @Override
+            public int compare(Integer o1, Integer o2) {
+                return Double.compare(array[o1], array[o2]);
+            }
+        };
+        return argsort(indices, comp);
     }
 
     /**
@@ -549,6 +595,22 @@ public class Utils {
         array[j] = temp;
     }
 
+    public static void swap(int[] array, int i, int j) {
+        if (i == j)
+            return;
+        int temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+    }
+
+    public static void swap(double[] array, int i, int j) {
+        if (i == j)
+            return;
+        double temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+    }
+
     /**
      * Calculate the angle formed by three Point
      * 
@@ -561,5 +623,125 @@ public class Utils {
         Vector v1 = new Vector(p1.x - p2.x, p1.y - p2.y);
         Vector v2 = new Vector(p3.x - p2.x, p3.y - p2.y);
         return Vector.angle(v1, v2);
+    }
+
+    /**
+     * Quick select for primitive arrays
+     * 
+     * @param array Array to select
+     * @param k     Rank to select (starts from 0)
+     * @param start Position to start
+     * @param end   Search ends at array[end - 1]
+     * @return Selected element
+     */
+    public static int quickSelect(int[] array, int k, int start, int end) {
+        if (start >= end)
+            return array[start];
+        int mid = (start + end) / 2;
+        swap(array, start, mid);
+        int pos = start + 1;
+        for (int i = start + 1; i < end; i++) {
+            if (array[i] < array[start])
+                swap(array, i, pos++);
+        }
+        swap(array, --pos, start);
+        if (k == pos)
+            return array[pos];
+        else if (k < pos)
+            return quickSelect(array, k, start, pos);
+        else
+            return quickSelect(array, k, pos + 1, end);
+    }
+
+    public static double quickSelect(double[] array, int k, int start, int end) {
+        if (start >= end)
+            return array[start];
+        int mid = (start + end) / 2;
+        swap(array, start, mid);
+        int pos = start + 1;
+        for (int i = start + 1; i < end; i++) {
+            if (array[i] < array[start])
+                swap(array, i, pos++);
+        }
+        swap(array, --pos, start);
+        if (k == pos)
+            return array[pos];
+        else if (k < pos)
+            return quickSelect(array, k, start, pos);
+        else
+            return quickSelect(array, k, pos + 1, end);
+    }
+
+    /**
+     * Quick selection for generic arrays with customized Comparator
+     * 
+     * @param <T>
+     * @param array Array to select
+     * @param k     Rank to select (starts from 0)
+     * @param start Position to start
+     * @param end   Search ends at array[end - 1]
+     * @param comp  The Comparator to use
+     * @return Selected element
+     */
+    public static <T> T quickSelect(T[] array, int k, int start, int end, Comparator<T> comp) {
+        if (k < start || k >= end)
+            throw new ArrayIndexOutOfBoundsException(
+                    "Quick select in range [" + start + ", " + end + ") but the rank is " + k);
+        if (start >= end)
+            return array[start];
+        int mid = (start + end) / 2;
+        swap(array, start, mid);
+        int pos = start + 1;
+        for (int i = start + 1; i < end; i++) {
+            if (comp.compare(array[i], array[start]) < 0)
+                swap(array, i, pos++);
+        }
+        swap(array, --pos, start);
+        if (k == pos)
+            return array[pos];
+        else if (k < pos)
+            return quickSelect(array, k, start, pos, comp);
+        else
+            return quickSelect(array, k, pos + 1, end, comp);
+    }
+
+    /**
+     * Quick selection for generic arrays with customized Comparator, but get the
+     * index and leave the array unchanged
+     * 
+     * @param <T>
+     * @param array Array to select
+     * @param k     Rank to select (starts from 0)
+     * @param start Position to start
+     * @param end   Search ends at array[end - 1]
+     * @param comp  The Comparator to use
+     * @return Selected element
+     */
+    public static <T> int quickSelectIndex(T[] array, int k, int start, int end, Comparator<T> comp) {
+        ArgsortComparator<T> argComp = new ArgsortComparator<T>(comp, array);
+        Integer[] indices = new Integer[array.length];
+        for (int i = 0; i < indices.length; i++)
+            indices[i] = i;
+        return quickSelect(indices, k, start, end, argComp);
+    }
+
+    public static int quickSelectIndex(int[] array, int k, int start, int end) {
+        Comparator<Integer> comp = new Comparator<Integer>() {
+            @Override
+            public int compare(Integer o1, Integer o2) {
+                return Integer.compare(o1, o2);
+            }
+        };
+        return quickSelectIndex(box(array), k, start, end, comp);
+    }
+
+    public static int quickSelectIndex(double[] array, int k, int start, int end) {
+        Comparator<Double> comp = new Comparator<Double>() {
+            @Override
+            public int compare(Double o1, Double o2) {
+                return Double.compare(o1, o2);
+            }
+        };
+        return quickSelectIndex(box(array), k, start, end, comp);
     }
 }

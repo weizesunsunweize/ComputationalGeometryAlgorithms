@@ -149,6 +149,10 @@ public class ConvexHull {
         return ans;
     }
 
+    // TODO:
+    // Double trick
+    // Merge convex hulls
+
     public static void main(String[] args) {
         Point[] points = new Point[] { new Point(5, 10), new Point(2, 1), new Point(5, 2), new Point(4, 2),
                 new Point(5, 8), new Point(3, 4) };
