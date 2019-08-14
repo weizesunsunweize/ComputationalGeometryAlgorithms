@@ -1,6 +1,7 @@
 package cga;
 
 import cga.components.Point;
+import cga.components.Segment;
 import cga.components.Vector;
 
 import java.util.Arrays;
@@ -743,5 +744,22 @@ public class Utils {
             }
         };
         return quickSelectIndex(box(array), k, start, end, comp);
+    }
+
+    /**
+     * Check if two segments intersect. (Do not consider collinear case)
+     * 
+     * @param s1
+     * @param s2
+     * @return A point if intersect, else null
+     */
+    public static Point checkIfIntersect(Segment s1, Segment s2) {
+        double ta = ((s2.p1.y - s2.p2.y) * (s1.p1.x - s2.p1.x) + (s2.p2.x - s2.p1.x) * (s1.p1.y - s2.p1.y))
+                / ((s2.p2.x - s2.p1.x) * (s1.p1.y - s1.p2.y) - (s1.p1.x - s1.p2.x) * (s2.p2.y - s2.p2.y));
+        double tb = ((s1.p1.y - s1.p2.y) * (s1.p1.x - s2.p1.x) + (s1.p2.x - s1.p1.x) * (s1.p1.y - s2.p1.y))
+                / ((s2.p2.x - s2.p1.x) * (s1.p1.y - s1.p2.y) - (s1.p1.x - s1.p2.x) * (s2.p2.y - s2.p2.y));
+        if (ta < 0 || ta > 1 || tb < 0 || tb > 1)
+            return null;
+        return new Point(s1.p1.x + (s1.p2.x - s1.p1.x) * ta, s1.p1.y + (s1.p2.y - s1.p1.y) * ta);
     }
 }
